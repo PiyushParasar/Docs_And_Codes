@@ -1,0 +1,239 @@
+											MAVEN : - 
+
+Error type 1 : - 
+Missing artifact from nexus server when the artifact is already present , check in nexus if the artifact is there or not , check if artifact is corruped or not , check in maven-local-repo if artifact is correct or not!
+
+Error type 2 : -
+Missing Plugin or plugin causing issue , replace or override the plugin in local pom by following all the tags in order.
+
+
+Error type 3 : - 
+
+${project.version} - used when we need to call same version
+<appendAssemblyId>false</appendAssemblyId> - When we need to supress the errors like " -bin.tar.gz "
+
+Error type 4: -
+
+Maven version rollback issue , need to rollback the version in pom.xml and manually delete all the tags if generated.
+Tags gets generated during the build phase itself and then it tries to deploy in nexus.
+
+Error 5 :- 
+
+javadoc error is usually comes bcoz of maven version non-compatibility , java version non-compatibility and maven-release plugin , maven-site plugin versions non-compatibility.
+
+
+Error 6 : - 
+
+error is because you haven't mentioned remote repositories URL inside your project pom so therefore it wont be able to upload the jars and poms to nexus.
+Add these in pom
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+deploy:deploy-file -> deploy is plugin and deploy-file is goal.
+
+plugin:goal
+
+mvn dependency:list -DexcludeTransitive   - To check dependency list
+ mvn dependency:tree  - To check dependency tree
+ mvn dependency:resolve-plugins  - get a list of plugin dependencies
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Maven is a open source build tool that can be used for building and managing any Java-based project. It helps in getting the right jar files for individual projects.
+It can deploy,publish several projects at once.
+It is primarily written in java but it can support to build projects written in C#(C Sharp),Ruby,Scala etc.
+Maven manages Builds , Dependencies + versions , Also provides documentation. 
+Core configuration is written in Pom.xml. 
+
+									Maven’s Objectives : - 
+------------------------------------------------------------------------------------------------------------
+Making the build process easy -  Shields Developers from many informations.
+
+Providing a uniform build system  -  Maven builds a project using its project object model(POM) and a set of plugins. Once you familiarize yourself with one Maven project, you know how all Maven projects build.
+									 This saves time when navigating many projects.
+									 
+Providing quality project information
+
+Encouraging better development practices
+--------------------------------------------------------------------------------------------------------------
+									MAVEN PLUGINS
+									
+Build plugins : - Build plugins will be executed during the build and they should be configured in the <build/> element from the POM.Build plugins are used to execute specific goals.
+				  Build plugins are default plugins which are used to execute compile,or create war,jar files for the project.
+				  we can also use custom plugins for our java projects.
+
+Reporting plugins : - Reporting plugins will be executed during the site generation and they should be configured in the <reporting/> element from the POM.
+					  Reporting plugin is part of the generated site, Reporting plugins should be both internationalized and localized.
+					  
+-----------------------------------------------------------------------------------------
+										POM.XML : -
+
+The pom.xml file is the core of a project's configuration in Maven. It is a single configuration file that contains the majority of information required to build a project in just the way you want. 
+The POM is huge and can be daunting in its complexity, but it is not necessary to understand all of the intricacies just yet to use it effectively.
+
+Pom is an XML file which consists of all the configurations of the project,description of project,versioning information.
+
+Pom contains : - 
+1. Dependencies
+2. Developers and contributors
+3. Plugins
+4. Resources
+5. Plugin configurations.
+
+Minimum requirements of Pom.xml : - 
+1. project root
+2. model version - should be 4.0.0
+3. artifact id
+4. group id
+5. version of artifact.
+
+-------------------------------------------------------------------------------------------------------------
+									  EFFECTIVE POM.XML :-
+									  
+effective pom.xml is a sum pom file of "local pom" + "the parent pom file" that is mentioned in <parent> of local pom file.
+
+-------------------------------------------------------------------------------------------------------------------
+								MAVEN BUILD LIFECYCLE (mvn --version  , mvn package , mvn archetype:generate)
+
+Maven Phases : - 
+
+1. Validate: validate the project is correct and all necessary information is available.
+
+2. Compile: compile the source code of the project.
+
+3. Test: test the compiled source code using a suitable unit testing framework. These tests should not require the code be packaged or deployed.
+
+4. Package: take the compiled code and package it in its distributable format, such as a JAR.
+
+5. Integration-test: process and deploy the package if necessary into an environment where integration tests can be run
+
+6. Verify: run any checks to verify the package is valid and meets quality criteria
+
+7. Install: install the package into the local repository, for use as a dependency in other projects locally
+
+8. Deploy: done in an integration or release environment, copies the final package to the remote repository for sharing with other developers and projects.
+
+There are two other Maven lifecycles of note beyond the default list above. They are
+
+clean: cleans up artifacts created by prior builds.( mvn clean dependency:copy-dependencies package )
+site: generates site documentation for this project.( mvn site )
+
+
+Maven life cycle are collection of steps that needs to be followed to build a project.
+3 built-in build lifecycle are:- 
+1. Default - Handles project deployement.
+2. Clean - Handles project cleaning.
+3. Site - Handles project site documentation. 
+	
+Build lifecycle consist of a sequence of build phases, and each build phase consists of a sequence of plugins and goals.
+Each goal is responsible for a particular task.
+When a phase runs then all goals related to that phase also runs and its plugins are also compiled so as to make the executable jars.
+
+---------------------------------------------------------------------------------------------------------------------
+									Installing Apache Maven
+									
+The installation of Apache Maven is a simple process of extracting the archive and adding the `bin` folder with the `mvn` command to the `PATH`.
+Detailed steps are:
+
+Ensure JAVA_HOME environment variable is set and points to your JDK installation
+
+Extract distribution archive in any directory.
+
+unzip apache-maven-3.6.3-bin.zip ,
+    OR
+tar xzvf apache-maven-3.6.3-bin.tar.gz
+
+				Windows Tips:-
+				
+CHECK ENVIRONMENT VARIABLE
+echo %JAVA_HOME% 
+C:\Program Files\Java\jdk1.7.0_51
+
+Set environment variables for maven
+
+M2_HOME=C:\Program Files\Apache Software Foundation\apache-maven-3.3.1 M2=%M2_HOME%\bin , MAVEN_OPTS=-Xms256m -Xmx512m
+
+setx -m JAVA_HOME "C:\Program Files\Java\jdk1.7.0_51"
+setx -m AMVEN_HOME "C:\Program Files\apache-maven-3.6.3"
+setx -m PATH "%JAVA_HOME%\bin;%PATH%"
+setx -m PATH "%MAVEN_HOME%\bin;%PATH%"
+
+system variable - C:\Program Files\apache-maven-3.6.3\bin
+
+				Unix-based Operating System :-
+				
+CHECK ENVIRONMENT VARIABLE
+echo $JAVA_HOME
+/Library/Java/JavaVirtualMachines/jdk1.8.0_45.jdk/Contents/Home
+
+export JAVA_HOME=/usr/java/jdk1.8.0_151
+
+Adding to PATH:-
+
+export PATH=/opt/apache-maven-3.6.3/bin:$PATH
+export M2_HOME=/opt/apache-maven-3.6.3
+
+cd /etc/profile - folder in which environment variables are mentioned
+mvn clean install - installing maven
+
+------------------------------------------------------------------------------------------------------------------------------------
+									Configuring Apache Maven
+
+MAVEN_OPTS : - This variable contains parameters used to start up the JVM running Maven and can be used to supply additional options to it. E.g.
+			   JVM memory settings could be defined with the value -Xms256m -Xmx512m.
+
+settings.xml : - Located in USER_HOME/.m2 the settings files is designed to contain any configuration for Maven usage across projects.
+
+-------------------------------------------------------------------------------------------------------------------------------------
+									MAVEN Repository
+
+Maven repository refers to the directories of packaged Jar files that contains metadata. The Metadata refers to Pom file relevant to specific project.
+
+3 types of repositories : - 
+
+Local Repository : - This is a repository that is located in developers PC and all the dependencies is being downloaded from that folder only.
+
+Remote Repository : - This is a repository present on a web server where all the dependencies are located (works similar to central repository).
+					  Whenever some dpeendency is required its first downloaded from remote repository and then used on local PC of developer.
+
+Central Repository : - This is a repository which is present on Internet which is only called when the depenedency is not available on devlopers local PC nor
+					   on remote repository.
+			
+-----------------------------------------------------------------------------------------------------------------------------------------------
+									Build Profiles : - 
+									
+Build profiles refers to a set of configuration values that are required to build a project by using different configurations.
+Generally generic build config are used but sometimes some difference can be there due to which different build profiles are used for different environment builds.
+Different build profiles are added in Pom.xml which enables different builds.
+Build Profile helps in customizing build for different environments.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+								   Maven Architechture : -
+								   
+		reads pom file 		POM.XML			   all these would be downloaded
+												      from POM.XML
+[Maven] ---------------> [ Dependencies         ---------------------------->    Maven Repository
+						  Build profiles,
+						  Build plugins,modules,
+						  Lifecycles,goals,phases ]
+						 
+Maven reads the Pom.xml file then download the dependencies defined in Pom file from remote or central repository and caches it in local repository then
+create and generates reports based on the requirements and executes the lifecycles,phases,plugins and goals.
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+									  Advantages of Maven : - 
+									  
+1. Everything is automated, no need to download dependencies as it is taken care by maven itself.
+2. No need to worry about environment as source code can be written in one machine and can be build on another.
+3. Apache Maven helps manage all processes such as documentation,releasing,documentation and distribution of project management.
+4. It simplifies the process of project building(build process of project).
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+									 Build Tool : - 
+									 
+Build tool is essential for the process of builidng a project and for below processes: - 
+1. Generates the source code.
+2. Compile the source code.
+3. Generate documentation from source code.
+4. Packaging of compiled codes in Jar,War or Ear files.
+5. Installing the packaged codes into local repository,server and central repository.
+ 
+--------------------------------------------------------------------------------------------------------------------------------------------------
