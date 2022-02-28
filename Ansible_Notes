@@ -1,0 +1,157 @@
+Ansible is an open-source software provisioning, configuration management, and application-deployment tool enabling infrastructure as code. 
+It runs on many Unix-like systems, and can configure both Unix-like systems as well as Microsoft Windows.
+
+Ansible is Infrastructure as a code.
+Ansible is agentless and it works on SSH connections to perform tasks on different servers.
+It is simple , lightweight and easy to use.
+Uses inventory and playbook for omplementing tasks and automating tasks.
+Inventory file is hosts file that resides in /etc/ansible/hosts
+
+###########Installation of ansible############
+yum install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm  - To install extra enterprise package so that we can install ansible.
+yum install ansible
+
+########Ansible inventory file############
+There are two types of inventory files :
+- Static: Used for on-premise servers where we can mention hosts and ip addresses explicitely
+- Dynamic: Used for Cloud VMs where hostname keep changing used by writing scipts in python.
+
+We can keep host names or ip addressess or domain name in hosts file and group them into 1 ,
+Also we can assign the user in hosts.
+Eg:-
+#First group
+[test-web]
+abecd.dcs.example.lnt ansible_user=v12labc ansible_connection=ssh ansible_ssh_pass=pass@123 - This means user is 121abc which can perform tasks on the server abcd.
+db1 anisble_host=abc.diet.com               ~ Referencing abc.diet.com via db1 alias name.
+
+#second group
+[test2-db]
+abc.lky.com
+
+#Nested group
+[test-test2:children]               ~ Mentioning children to create a nested group of both groups.
+test-web
+test2-db
+
+
+##########Ansible adhoc commands#########
+Structure of adhoc commands:-
+command group/hostsname module/arguments(options) 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ansible all -m ping  											~ To test connection to all hosts in hosts file/inventory file
+ansible test -m ping 											~ this will perform the task on all hosts inside test group.
+ansible test -m shell -a "uptime" 								~ to perform shell commands on the servers use -a argument option.
+ansible all -m shell -a uptime -v                               ~ -v is used to check detail of which config file is used by ansible
+ansible -i /root/ansible/hostfile all -m ping 				    ~ to perform tasks via a differnet host file , use -i inventory option to provide the path to inventory file
+ansible all -a "uptime" 										~ Use commands directly with arguments 
+anisble all -a "reboot"
+ansible all -m user -a "name=Piyush password=abc"  				~ To use a module with arguments and create a new user on all hosts.
+id Piyush 														~ Type this on the client machine i.e. the hostmachine to check whether that id is present or not.
+ansible all -a "yum -y install httpd" 							~ to install a particular software on client servers.
+ansible all -m yum -a "name=httpd state=present" 				~ to install a particular software through yum module of ansible.
+ansible all -m yum -a "name=httpd state=absent"  				~ to uninstall a articular software through yum module of ansible
+
+
+############Ansible help docs#####################
+ansible-doc -l| more  		 ~ To find list of modules that are preent in ansible.
+ansible-doc -l | grep user   ~ to find a particular module.
+ansible-doc user             ~ To get details of user module.
+ansible --help               ~ to get docs related to ansible
+
+
+################Ansible Playbooks####################
+Ansible playbboks are way to do automations on a server using scripts.
+Playbooks are written in YAML.
+Write playbooks with .yml extensions.
+*********************************************************************
+Playbooks start with ---            ~ 3 minus signs 
+Eg:- 
+---												|
+- hosts: test									|
+  tasks:										|			hosts is group name from inverntory, tasks are list of tasks to be performed
+  - name: Install a httpd package.				|				name is definition of the tasks to be performed
+    yum: name=httpd state=present				|					yum and service are the module names i.e being used
+  - name: Start a httpd service.				|
+    service: name=httpd	state=restarted			|
+
+
+
+Eg.2:-
+---																			|
+- hosts: all																|
+  tasks:																	|			hosts is group name from inverntory all means all the hosts that are there in inventory, tasks are list of tasks to be performed
+  - name: Check a httpd package.											|				name is definition of the tasks to be performed
+    yum: name=httpd state=latest											|					yum and service are the module names i.e being used
+  - name: Write apache config file.											|
+    template: src=/root/httpd.new dest=/etc/httpd.conf						|
+	notify:																	|
+    - restart apache														|
+  - name: ensure apache is running (and enable it at boot)					|
+    service: name=httpd state=started enabled=yes							|
+  handlers:																	|
+  - name: restart apache													|
+     service: name=httpd state=restarted   									|
+
+################Playbook synatx#################
+ansible-playbook playbooksname.yml --syntax-check    				 ~ for checking the syntax of the playbook. 
+ansible-playbook playbooks.yml                                       ~ for running a playbook.
+ansible-playbook playbooks.yml --list-hosts							 ~ for checking all hosts that will get effected by this playbook
+
+
+########################### Ansible Roles #########################################
+1. Ansible roles consist of many playbooks together which is similar to modules in puppet and cook books in chef
+2. Roles is a way to group multiple tasks together in a container to do automation in effective manner with clean directory structure.
+3. Roles are a set of tasks and additional files for a certain role which allow you to break up the configurations.
+4. It can be easily reused by anyone if role is suitable to anyone.
+5. It can be easily modified and will reduce syntax errors.
+
+
+############################ How to create Ansible roles ###############################
+ansible-galaxy init /etc/ansible/roles/apache --offline                     ~ Ansible-galaxy is the command to create roles 
+tree /etc/ansible/roles/apache                                              ~ To check the tree structure of the contents inside apache role.
+
+Folders inside roles/apache -
+defaults
+    -- main.yml
+files
+handlers
+    -- main.yml
+meta
+    -- main.yml
+tasks
+    -- meta.yml
+templates
+tests
+    -- inventory
+    -- test.yml
+vars                                                                            | vars will get precedence over default.
+    -- main.yml
+    
+
+###################### Creating files and yml files for roles ##########################
+################################## Tasks folder structure ##############################
+Go to tasks folder in roles/apache folder
+Write the below commands in the main.yml file
+
+- import_tasks: install.yml
+- import_tasks: configure.yml
+- import_tasks: service.yml
+
+Now create these 3 yaml files inside the tsks folder in roles/apache folder and copy and place the tasks from playbooks.yml in it.
+Eg:
+install.yml will contain:
+---
+- name: Install a httpd package.				
+  yum: name=httpd state=present
+
+Similarly other yml files will contain the block of codes from playbooks.yml.
+
+For running these roles create a new playbook.yml file and mention these steps in that:
+---
+- hosts: all
+  roles:                                            | mention the roles folders you have created using anisble-galaxy.
+  - apache
+                            
+
+###########################################################################################
+

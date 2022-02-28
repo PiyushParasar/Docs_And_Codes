@@ -1,0 +1,228 @@
+											LINUX
+					   
+Linux is an Unix-like , open source operating system which is capable of handling multiple users at the same time.
+Linux code is accessible to all , it is faster in nature and once something is deleted from this then it is deleted froeevr unlike windows.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+											How to reset password
+											
+Open a terminal window.
+Issue the command sudo passwd USERNAME (where USERNAME is the name of the user whose password you want to change).
+Type your user password.
+Type the new password for the other user.
+Retype the new password.
+Close the terminal.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+											KERNEL
+											
+The computer program that allocates resources and coordinate details of computer internals is called Kernel or OS.
+Users communicate to OS through a shell.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+											Useful Commands
+											
+1. "chmod 777 filename"  - change the permissions of filename. [ user/admin , group , other/public  - 777]
+0 = 0 = nothing
+1 = 1 = execute
+2 = 2 = write
+3 = 2+1 = write and execute
+4 = 4 = read
+5 = 4+1 = read and execute
+6 = 4+2 = read and write
+7 = 4+2+1 = rwx
+
+read -p 'contents like Please enter name :' varname - used to make cursor stay in the same line
+echo -n - to remian in same line
+read -s 'contents like Please enter name :' varname - To make the input value hidden from the screen.
+read -a  varname - To read value as an array.
+
+To store output of a command in a variable inside shell use $("Commands to execute"),
+variable=$(cat opt/software/Piyush)
+
+
+echo ${name[0]} - To call an array values.
+
+2. mv filename filename1 - renames the filename to filename1.
+
+3. mv filename /home/tomcat - moves the file from current directory to the path mentioned.
+
+&> - to save everything.
+&>> - to save everything and append.
+2> - to only save errors.
+>&2 - means stores what is in echo to stderr standard error 
+> redirects output to a file, overwriting the file.
+>> redirects output to a file appending the redirected output at the end.
+<<< denotes a here string. It passes the word on the right to the standard input of the command on the left.
+mvn clean install >> local.log 2>&1 - to get all logs inside file
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+											Shell Scipt
+./filename.sh -  run a shell script
+
+#!/bin/sh  -  First line in shell script required to make a shell script work(shabang line)
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+											Arrays
+
+
+IFS=$'\n' read -r -d '' -a my_array < <( my_command && printf '\0' )								
+os=('abc' 'bca' 'rft')
+echo $os - prints first element in array
+echo ${os} - prints first element in array
+echo "${os[@]}" or echo ${os[*]} - All elements in the array
+echo "${os[1]}"  - Prints value at 1 i.e element at index 1.
+echo "${!os[@]}" or ${!os[*]}  - Prints number of indexes in the array. 
+echo "${#os[@]}" or ${#os[*]} - Prints length of array.	
+echo ${#os[1]} - length of 1st element of array.									
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+											Arithmetic Operations
+											
+if [ $(( $a - $b )) = 12 ]
+then
+echo $a
+fi
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+											grep command
+
+grep -i - to ignore case i.e lowercase or uppercase while finding a file.
+grep -v - to exclude all lines that matches pattern after -v .
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+											awk command
+											
+awk '{print}' employee.txt - prints all lines in file.
+awk '/manager/ {print}' employee.txt - prints all line that contains word 'manager'.
+awk '{print $1,$4}' employee.txt - separates line in $1-9 by using blankspace and prints value of 1st and 4th parameter.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+											Curl Commands
+											
+Curl command used to send data from or to a server.
+
+curl -o - Downloads the file and saves it with parameter provided . Eg curl -o hello.zip ftp://speedtest.tele2.net/1MB.zip stores file with hello.zip name
+curl -O - Downloads and saves with the name provided in URL. Eg curl -O ftp://speedtest.tele2.net/1MB.zip stores with 1MB.Zip name.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+                                          Special Varibles 
+
+$0 - filenaem of script
+$1...9 - position of argument passed ( Argument passed - Hello There $2 value - There , $1 - Hello)
+$# - Number of arguments passsed to a script
+$* - all the arguments that are double quoted ("")
+$@ - all the arguments that are individually double quoted ("")
+$? - the exit status of the last command executed. (echo $? gives 0 if last command was successfull and 1 if last command was a failure).
+$$ - The process number of current shell for the shell script , process id under which it is excuted.
+$! - Process number of last background command.
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+											Basic Operators 
+
+  Arithametic Operators : - 
+
+Eg;- $a = 10 , $b = 20
+
++(Addition) `expr $a + $b`
+-(Subtraction)   `expr $a - $b`
+*(Multiply)  `expr $a * $b`
+/(Divide) `expr $a / $b`
+%(Modulus) `expr $a % $b` (Remainder)
+=(Assignment)  a=$b (value of b in variable a)
+==(Equality) [$a == $b] return false
+!=(Not Equal) [$a != $b] returns true
+
+   Relational Operators : - 
+   
+Only work for numeric vlues and numeric string vlues.
+
+-eq(equal to) [$a -eq $b] not true
+-ne(not equal) [$a -ne $b] true
+-gt(greater than) [$a -gt $b] not true
+-lt(Less than) [$a -lt $b] true 
+-ge(greater than or equal to) [$a -ge $b] not true
+-le(less than or equal to) [$a -le $b] true
+
+   Boolean Operators : - 
+   
+!(Inverts true to false - negotiation) [!true] false
+-o(Logical OR - If one condition is true then true) [$a -eq $b -o $a -gt $b] false
+-a(Logical AND - If both condition true then true) [$a lt 20 -a $b -gt 100] false
+
+  String Operators : - 
+  
+=(Equal) [$a = $b]   not true
+!=(Not Equal) [$a != $b] true
+-z(Checks if length of String is Zero)(Checks if string is an empty string) [ -z $a] false
+-n(Checks if lenghth of string is non zero) [-n $a] true
+str(Checks if string is not empty string) 
+
+  File Test Operators : - Test various properties associated to a file. 
+  
+-b file
+-c file
+-d file(Checks if a file is directory)
+-f file(Checks if a file is a normal file)
+-g file
+-k file
+-p file
+-t file
+-u file(Checks if file )
+-r file(if file is readable)
+-w file(if file is writable)
+-x file(If file is executable)
+-s file(CHecks if file has size greater than 0)
+-e file(If file exists)
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+														IF Statements (fi for ending if block)
+														
+if [ condition ]		                     		if [ condition ]						    if [ condition ]		    if [ $a == $b ] && [ "$a" == "trunk" ] or 
+																															if [[ $a == $b && "$a" == "trunk" ]]
+then 											then										then
+	Statement										Statement									Statement
+fi												else										elif
+													Statement								then
+												fi												Statement
+																							else
+																								Statement
+																							fi
+---------------------------------------------------------------------------------------------------------------------------------------------------------------														
+										  Loops
+	For Loop : -									  				
+																	for (( i=0; i<${arraylength}; i++ ));
+																	do
+																		echo "index: $i, value: ${array[$i]}"
+																	done
+										  
+#!/bin/sh
+
+for variable name in $*        for var in 0 1 2 3 4 
+do 								do 
+		echo $variable name           echo $var
+done							done
+
+-------------------------------------------------------------
+	While Loop : - 
+	
+while condition					a=0
+do								while [$a -lt 10]
+	statement					do 
+done								echo $a
+									a='expr $a + 1'
+								done
+								
+---------------------------------------------------------------
+   Until Loop : - (Execute something until a statement is true)
+   
+Until condition					a=0
+do								until [! $a -lt 10]
+	statement					do 
+done								echo $a
+									a='expr $a + 1'
+								done
+		
+----------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+									
+
+
+		

@@ -1,0 +1,344 @@
+https://labs.play-with-docker.com/
+
+Docker is open source and written in Google’s Go language. 
+
+Docker is based on containerization (OS-level virtualization), where the physical server and operating system are virtualized to produce multiple instances. 
+
+Docker is an application container and runs one service or application in a runtime instance. Though, several applications can run independently in isolated containers.
+
+A Docker container is an environment that contains application code, software package, system tools, libraries, services, dependencies etc. 
+
+Docker provides a rapid development cycle for developers and sysadmins. 
+
+Developers can emphasize on building applications. Sysadmins can emphasize on deployment. While, both can still collaborate their work together on a shared framework.
+
+
+Docker adopts a client/server architecture.
+
+Docker Client: It is a primary UI to Docker which takes inputs/commands from user, and gets the response from Docker daemon.
+
+Docker Daemon: Daemon builds, runs, and ships containers and can exist on same or different hosts.
+ 
+Docker components:
+Docker Engine is a packaging tool which provides a powerful work flow for building and containerizing your applications. It helps to build, ship, run and manage the containers
+
+Docker Hub hosts a registry to upload and manage your apps and offers automated workflows
+
+Docker image (a build component) is a read only template, which is used to create Docker containers. You can reuse existing images, or build new as you require them
+
+Docker registry (a store component) hold images in a public store (called the Docker Hub) or a private store
+
+Docker container (a run component) holds applications along with dependencies/components/libraries. Container are built from Docker images
+
+Highlights:
+Setup and configure Docker on a host
+
+Allow Docker accessible to non-root users on the host
+
+Demonstration steps:
+Docker is accessible in Community Edition (CE) and Enterprise Edition (EE).
+
+Docker Enterprise Edition is intended for developers to run and scale business critical applications in production. 
+
+Docker Community Edition is appropriate for developers or small teams to get started or experiment application deployment with Docker.
+
+Choose a preferable operating system to install Docker on cloud infrastructure or on-premises.
+
+Step 1: Install Docker 
+
+In this demonstration, AWS cloud platform is used to setup Docker. 
+
+Login to AWS management console and create an EC2 instance using Amazon Linux AMI as shown below:
+
+
+
+Connect to the EC2 instance and install Docker:
+
+Check for Linux updates, using following command:
+
+$ > sudo yum update –y 
+ 
+
+Install Docker setup using below command:
+
+$ > sudo yum install –y docker
+ 
+
+Step 2: Configure Docker
+
+For non-root users in Linux, you might need to proceed with below steps to avoid permission issues.
+
+Create the docker group using following command:
+
+$ > sudo groupadd docker
+ 
+
+Add user to the docker group using following command:
+
+$ > sudo usermod -aG docker $USER
+ 
+
+Log out and log in again so that the changes get reflected. 
+
+Highlights:
+Test working of Docker setup on the host
+
+Extract details about Docker setup
+
+Demonstration steps:
+Step 1: Check supported version of Docker
+
+Once Docker is installed and the Docker daemon is actively running on your host, check the Docker version using following command on Docker client.
+
+$ > docker --version
+ 
+Step 2: Find details about your docker installation
+
+Login as root user suing following command and give the root user password:
+
+$> sudo su
+ 
+
+Extract metadata or information about Docker using following command:
+
+$ > docker info
+
+
+While running application components and services in isolated containers, you might require some application services such as Apache server, database engines etc.
+to run as background processes. While, some other processes would need terminal access such as Ubuntu bash shell to execute commands on top of it.
+These requirements could be catered easily using Docker interactive and daemonized containers which helps to launch containers in foreground and background respectively.
+In the next page, you will learn about interactive and daemonized containers in Docker.
+
+You can launch containers in:
+Interactive mode which provides terminal access (in foreground) to run commands inside the container and get the output. 
+You can easily disconnect and connect back to running environments.
+Daemonized mode which are run long running background processes. You can observe the working output of container processes running in background.
+
+Below are examples of using interactive containers:
+To launch Python interactive shell, to build and run programs
+To explore root file system of bash shell containers
+
+Below are examples of using daemonized containers:
+To launch several cron job commands which runs in background
+To associate several processes with already running jobs
+
+To launch Docker containers, use following command:
+
+$ > docker run [options] <imagename>:<tagname>  <commandname>
+ 
+docker run - launches a container based on a Docker image
+imagename - is the packaged software i.e. Docker image. Docker Daemon searches for the image on the local Docker host first. 
+In case, there is no such image, then it downloads the image from Docker Hub (library for container images) automatically
+
+tagname - is the version
+options - are flags to be used with the command
+commandname - specifies command to run inside container
+
+Docker run creates a new container, allocates file system, network interface, IP, mounts a read-write layer and finally executes the process. 
+It ensures availability of all the libraries, services, dependencies required for the application.
+
+Interactive containers:
+Use following options in the docker run command to run containers in an interactive mode:
+
+–i flag - to make an interactive connection using standard input (STDIN) in container
+–t flag - to assign a pseudo terminal/TTY inside the container that attaches stdin and stdout
+--rm=false -   to automatically remove the container when it exits. Usually, we use --rm flag for commands that run in foreground, to clean up the container after the command has completed
+
+Daemonized containers:
+Use following options in the docker run command to run containers in a daemonized mode:
+
+-d flag - to run a container in the background
+--name=container_name - to assign a user-defined name to container
+
+Highlights:
+Manage Docker daemon on the host
+
+Work with interactive containers
+
+Demonstration steps
+Step 1: Manage Docker daemon
+
+Use following commands as appropriate:
+
+#Before launching containers, ensure that the Docker daemon service is running on your host.
+$ > systemctl start docker
+#Check the service status:
+$ > systemctl status docker
+#To restart or stop the Docker daemon, using following command:
+$ > systemctl <stop| restart> docker
+ 
+
+Step 2: Launch interactive containers using following command:
+
+$ > docker run --rm=false -i -t ubuntu: latest /bin/bash
+ 
+
+Once the container runs, a pseudo terminal is instantiated and hostname of container will be shown in the shell prompt. 
+
+You can now execute commands in this bash shell.
+
+Step 3: Explore root file system of container
+
+Docker creates a writable layer on top of base image where you can edit files or make some changes in the filesystem.
+
+Note: Inside the container, command’s process is always PID 1.
+
+List the processes running on the container using following command:
+
+$ > ps aux
+ 
+
+Step 4: Exit or disconnect from the container
+
+You can use below options:
+exit command - to terminate the container
+CTRL-p + CTRL-q: to disconnect temporarily without terminating the container
+ 
+
+Step 5: List container processes
+
+Containers run only till the command is active. Hence it runs as long as the process of “docker run” command is running.
+
+#List running containers, using following command:
+$ > docker ps
+#Use flag –a to list all containers (including those terminated/shutdown)
+$ > docker ps -a
+
+Summary:
+With these demonstrations, you have learn how to:
+
+Manage Docker daemon
+Launch interactive containers
+List container processes
+
+
+Highlights:
+Work with daemonized containers
+
+Analyze standard output of daemonized containers
+
+Demonstration steps:
+Manage the Docker daemon well and launch applications and services in different container environments.
+
+Step 1: Launch daemonized containers
+
+Use a simple while loop in an ubuntu bash shall to create an ongoing background process, using following command:
+
+$ > docker run --name my_daemonized -d ubuntu /bin/sh -c "while true; do echo my daemonized container; sleep 1; done "
+ 
+This command returns a long string i.e called as <container id> to uniquely identify the container.
+While running 'docker ps' command, you will find a shorter variant of  container ID i.e. b83e11528b95 as well.
+
+ 
+Step 2: Observe the standard output of container
+
+Use following command to observe standard output of container running in background:
+$ > docker logs <container_name/container_id>
+
+Step 3: Start a new process inside an already running daemonized Docker Container
+To start a new process inside the Docker Container, use the following command:
+$ > docker exec <container_name/container_id> <process-name>
+ 
+You can either run a new background process or get terminal access on the same container.
+
+Create a new background process
+Crete a directory /tmp/test, as shown below:
+$ > docker exec -d my_daemonized mkdir /tmp/test
+ 
+Getting terminal access on same container 
+Run a bash shell inside and get terminal access on the container, as shown below:
+
+$ > docker exec -it my_daemonized /bin/bash
+
+Even if you exit from the terminal, container will still run, as the background process has not completed.
+
+Highlights:
+Manage container processes on the host
+
+Access the existing containers
+
+Demonstration steps:
+Manage the container processes (stop, restart, kill, delete) or even delete the environments which are no longer required (mostly test environments).
+
+Step 1: Start, stop, restart containers
+
+You can start, stop, restart containers using following command:
+$ > docker <start| stop | restart> <container name/ container ID>
+ 
+
+Use ‘docker kill’ command for forcefully stopping the container.
+
+Step 2: Connect to existing containers
+You can only connect to running containers. 
+
+A container is launched and disconnected using CTRP-p+CTRL-q
+Use ‘docker ps’ to list the container process and check its container id 
+
+Use following command to attach to the container:
+$ > docker attach <container name/ container ID>
+
+Step 3:  Delete containers
+Containers should be stopped before deleting it, else it gives error.
+
+Use following command to delete containers:
+$ > docker rm <container name/ container ID>
+
+Highlights:
+Check out container’s resource usage and changes on file system
+Extract details associated with a container
+
+Demonstration steps:
+Extract information about container processes, the resource usage and metadata of each container.
+
+Step 1: Observe Container’s resource usage
+You can display Container’s resource usage statistics using following command:
+
+$ > docker stats <container name/container_id>
+$ > docker stats my_daemonized
+ 
+Step 2: Inspect changes on a container's file system
+Inspect changes on a container's file system using:
+$ > docker diff <container name/container_id>
+ 
+
+Use 'docker diff' command to inspect changes
+
+Step 3: Extract metadata about a Container
+
+You can fetch metadata of Docker Container, using following command:
+$ > docker inspect <container name/container_id>
+
+
+Docker Images - During different phases of application development and deployment cycle, you would want to: 
+				Download several required environments and Customize environments easily
+				Modify the application environments without complexities
+				Replicate environments and share with operations and testing teams
+
+Docker images and Docker file is the solution to address these requirements.
+
+
+Docker images:
+Docker images are packaged form of applications or programs in the file system.
+The file system comprises of everything required for its execution
+i.e. code, runtime, system tools, system libraries) which ensures that the application will always run irrespective of the environment
+
+These are read only templates used to build containers (an environment to run applications)
+
+Advantages of Docker image:
+It allows rapid development cycle. You can quickly pull applications, test them and execute instantaneously on several platforms
+It provides reproducible infrastructure to release latest patches quickly.
+It allows easy modifications and efficient versioning of applications by tagging,committing changes or doing rollback
+It comprises of the application and its dependencies and are easily portable across Docker enabled machines
+You can easily distribute and manage the Docker images into the Docker Hub or a local registry
+
+
+Dockerfile:
+A Dockerfile is a text file of instructions used to build or customize a Docker image.
+Dockerfile creates an automated build that executes several commands run in sequence to create an image.
+
+Advantages of Dockerfile:
+Dockerfile helps to build Docker images faster 
+Complete deployment is handled by Dockerfiles and containers. 
+Docker Hub also provides tools to automatically build and deploy revisions
+
+

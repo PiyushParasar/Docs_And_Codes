@@ -1,0 +1,287 @@
+Setting up Jenkins
+
+#Download java using yum
+1. yum install java  -  This will install default open jdk version 1.8 on the server.
+
+#For removing default installed java use
+yum remove java
+
+#Update yum repository
+2. sudo yum upgrade
+
+#Export proxy to use wget
+3. export https_proxy="http://yourproxy"
+
+#Install jenkins key	
+4. sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+#Jenkins requires daemon to run jenkins in background so we would have to install daemonize package first
+#Use below path to get dameonize package using wget commands
+5. wget https://centos.pkgs.org/7/epel-x86_64/daemonize-1.7.7-1.el7.x86_64.rpm.html
+
+#Install daemonize using yum package manager
+6. yum install daemonize
+
+#get Jenkins latest version from https://get.jenkins.io/redhat-stable/ and use wget to download it.
+7. wget https://get.jenkins.io/redhat-stable/
+
+#install jenkins using yum package manager.
+8. yum install jenkins-2.319.2-1.1.noarch.rpm
+
+#Goto jenkins file and check the java path variables and path etc.
+9. cd /etc/init.d/jenkins
+
+#jenkins by default home directory where all config files and logs are generated.
+####Chnage the workspace dir of jenkins by going to below path and editing config file of jenkins######
+10. cd /var/lib/jenkins
+ <workspaceDir>${JENKINS_HOME}/../jenkins_workspace/${ITEM_FULL_NAME}</workspaceDir>
+/opt/software/Tools/jenkins_workspace
+
+#jenkins system configurations folder which has jenkins home path , java path and etc.
+11. cd /etc/sysconfig/jenkins
+
+#Start stop commands for jenkins service
+systemctl start jenkins
+systemctl stop jenkins
+systemctl status jenkins
+systemctl daemon-reload
+sudo service jenkins start/stop/restart
+
+#Jenkins initial passwrd for admin path
+/var/lib/jenkins/secrets/initialAdminPassword
+
+#If u want to make workspace path changes then go to this directory
+/var/lib/jenkins/config.xml - changes like workspace changed
+
+########Chnage owner to jenkins for workdir
+chown -R jenkins:jenkins jenkins_workspace
+
+############### Modifying bash profile of jenkins ################
+####setting bash profile #####
+sudo usermod -s /bin/bash jenkins
+
+################## Check it is updated or not by traversing to passwd dir#################
+cd /etc
+vi passwd
+
+###########Set environment variable for root user in home dir of root
+vi /root/.bash_profile
+
+#####storage:
+/var/lib/jenkins/
+
+######log path: 
+/var/log/jenkins
+
+
+###########set java home and maven home in environment variable to be used by jenkins.
+M2_HOME=/opt/software/apache-maven-3.8.4
+JAVA_HOME=/usr/lib/jvm/jdk1.8.0_151
+export JAVA_HOME
+PATH="$PATH:$M2_HOME/bin:$JAVA_HOME/bin"
+export PATH
+
+
+#############Path of jenkis.war & For running a war or jar file use below commands
+/usr/lib/jenkins/jenkins.war
+java -jar filename
+Eg: java -jar jenkins.war --httpPort=9090 (For running on different port)
+
+
+/etc/alternatives/java
+/usr/lib/jvm/java-1.8.0/bin/java
+/usr/lib/jvm/jre-1.8.0/bin/java
+/usr/lib/jvm/java-11.0/bin/java
+/usr/lib/jvm/jre-11.0/bin/java
+
+##################How to configure a pipeline with gitlab scm###############
+select pipeline with scm 
+then copy the git URL and paste in the text box , if you are facing "Failed to connect to repository : Error performing git command: git ls-remote -h" : Error
+Then check on the jnekins server whereis git or which git to check the path of git and then copy that path and apste in Global tools configuration section in git section in jenkins.
+
+################### Nexus speed issue resolution#########################
+update the below parameters in wrapper.conf 
+# Size Java memory, in MB (-Xms)
+wrapper.java.initmemory=700
+# Size Java memory, in MB (-Xmx)
+wrapper.java.maxmemory=1500
+
+
+# Size Java memory, in MB (-Xms)
+wrapper.java.initmemory=256
+# Size Java memory, in MB (-Xmx). This option only supports a setting up to 4000 (4Gb).
+# If you need more, comment this option out and use an explicit wrapper.java.additional option with -Xmx
+wrapper.java.maxmemory=4000
+
+========================================================================================================================================================================================
+											Knowledge Base and extra commands tried for downloading jenkins
+
+/etc/yum.repos.d/jenkins.repo
+
+3. (optional) sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+[jenkins]
+name=Jenkins-stable
+baseurl=http://pkg.jenkins.io/redhat-stable
+gpgcheck=1
+	
+
+
+Error: Package: jenkins-2.319.3-1.1.noarch (jenkins)
+           Requires: daemonize
+ You could try using --skip-broken to work around the problem
+ You could try running: rpm -Va --nofiles --nodigest
+
+5. sudo yum install epel-release java-11-openjdk-devel
+
+6. sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+       or
+	   
+wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+sudo yum install epel-release-latest-7.noarch.rpm
+sudo yum --disablerepo="*" --enablerepo="epel" list available | grep 'package'
+
+=========================================================================================================================================================================================
+                                                Dummy jenkins file example
+
+Eg:
+@Library('shared-library') _
+
+def varName = 'ABC'
+
+
+pipeline {
+    agent any
+
+ //   options {
+ //       office365ConnectorWebhooks([[name: 'ABC Notification', notifyFailure: true, notifyRepeatedFailure: true, notifySuccess: true, url: WebHookURL]])
+ //       disableConcurrentBuilds()
+ //   }
+
+   environment { 
+        VAR_NAME = '/oracle/product/11.2.0.4/dbhome_1'
+		VAR_DIR = '/usr/local/oracle/scripts/'
+  }
+
+    parameters {
+        choice choices: ['abc', 'cde', 'fdg'], description: 'Which one?', name: 'environment'
+        choice choices: ['A', 'B'], description: 'A or B ', name: 'refresh'
+        string defaultValue: '/oracle/product/11.2.0.4/dbhome_1', description: 'Path to Oracle home.', name: 'oracleHome', trim: true
+        choice choices: ['no', 'yes'], description: 'Should we do?', name: 'refreshCopy'
+        choice choices: ['no', 'yes'], description: 'Switch?', name: 'switchServices'
+    }
+
+    stages {
+       
+        stage('Refresh') {
+            when { expression { params.refreshCopy == 'yes' } }
+            
+          //      stage('ABC') {
+                    steps {
+			        withCredentials([string(credentialsId: 'key', variable: 'sshKey')]) {
+		            writeFile file: 'mykey', text: sshKey
+		            sh '''
+		            chmod 600 mykey
+		            ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname "export env_var=$ENV_VAR;$SCRIPTS_DIR/../shellscript.sh $ENV_VAR $parameter 'stringparam'"
+                    		
+                     '''
+					  }
+					}
+           //     }
+                
+                
+            
+        }
+        
+        stage('Stage2') {
+            parallel {
+                stage('SubStage1') {
+                    agent { label 'hostname of agent on which we want to run' }
+                    when { expression { params.environment == 'abc' } }
+                    steps {
+					   script{
+                        shared-lib_functionname("varvalue" + value + params.refresh + "1", oracleHome, "hostnameifrequired")
+						}
+                    }
+				} 
+		    
+               
+                stage('SubStage2') {
+                    agent { label 'hostname of agent on which we want to run' }
+                    when { expression { params.environment == 'def' } }
+                    steps {
+		         script{
+                        shared-lib_functionname("varvalue" + value + params.refresh + "1", oracleHome, "hostnameifrequired")
+				}
+                    }
+                }
+                
+        
+    }
+}
+}
+
+def shared-lib_functionname(String Name,String Home,String agent)
+{
+     
+	def preCmd = ''
+
+            withCredentials([string(credentialsId: 'system-password', variable: 'systemPassword')]) {
+		preCmd = '' + \
+			'export SID=' + Name + ';' + \
+            		'export HOME=' + Home + ';' + \
+            		'export PATH=$PATH:' + Home + '/bin;' + \
+            		'export USER=system;' + \
+            		'export PASS=' + systemPassword 
+	    }
+	
+	
+	ansiColor('xterm') {
+	    withCredentials([string(credentialsId: 'key', variable: 'sshKey')]) {
+		writeFile file: 'mykey', text: sshKey
+		sh """
+		chmod 600 mykey
+		echo "3rd : $Name"
+		"""
+		}
+		if [ "${Type}" = "AB" ] 
+		then
+			ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@$agent "$preCmd;$SCRIPTS_DIR/../shellscript.sh 'disable'"
+		fi
+	}
+}
+}
+
+Eg: Loop in Jenkins file
+stage('23,40'){
+		      steps{
+				
+				 withCredentials([string(credentialsId: 'key', variable: 'sshKey')]) {
+		      writeFile file: 'mykey', text: sshKey
+		      sh '''
+			  chmod 600 mykey
+			  ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname/ip "$SCRIPTS_DIR/shellscript.sh '23'"
+              status=$(ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname/ip "cat /usr/local/scripts/work_dir/status_23.txt")
+              while [[ "${status}" = "RUNNING" ]] || [[ "${status}" = "QUEUED" ]];        
+              do
+              sleep 60 
+              ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname/ip "$SCRIPTS_DIR/shellscript.sh '23'"
+              status=$(ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname/ip "cat /usr/local/scripts/work_dir/status_23.txt")
+              done
+              ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname/ip "$SCRIPTS_DIR/shellscript.sh $status '23'"
+			  
+			  
+			  
+			  ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname/ip "$SCRIPTS_DIR/shellscript.sh  '40'"
+              status=$(ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname/ip "cat /usr/local/scripts/work_dir/status_40.txt")
+              while [[ "${status}" = "RUNNING" ]] || [[ "${status}" = "QUEUED" ]];        
+              do
+              sleep 60 
+              ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname/ip "$SCRIPTS_DIR/shellscript.sh '40'"
+              status=$(ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname/ip "cat /usr/local/scripts/work_dir/status_40.txt")
+              done
+              ssh -i mykey -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@hostname/ip "$SCRIPTS_DIR/shellscript.sh $status '40'"
+			  '''
+			     }
+				}
+			}

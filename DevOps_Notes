@@ -1,0 +1,275 @@
+############## DevOps Related Notes from DevOps training ########################
+
+##################3 Benefits of DevOps ##############################
+Key reasons for adopting DevOps:
+1. Early time to market
+2. Improved quality, Reliability and stability of the applications while delivering rapidly
+3. Ensure service levels with fast releases
+
+################# What is DevOps ###########################
+DevOps:
+1. involves a collaborative working of the Development, testing, infrastructure, operations teams together with a unified process, metrics and goals
+2. is driven by automation
+3. maturity is measured by speed, frequency,stability and quality of releases
+4. is a mindset an approach in which all teams work together to achieve a common goal.
+
+#################################################### Working with Git ####################################################3
+1. git init: initialises an empty git reposiory(converts existing directory into git repository).
+
+2. git add: Adds files in the to the staging area for Git. Before a file is available to commit to a repository we need to add entire directories, specific files, or all unstaged files. 
+   2.1. git add . - To add all files not staged
+   2.2. git add index.html - To stage a specific file.(Add the path of file)
+   2.3. git add css - To stage an entire directory.
+
+3. git commit: Record the changes made to the files to a local repository. For easy reference, each commit has a unique ID.
+   3.1. git commit -m "Commit message in quotes" - Adding a commit with message.
+
+4. git status: git status will return the current working branch. If a file is in the staging area, but not committed, it shows with git status.
+
+5. git branch: To determine what branch the local repository is on, add a new branch, or delete a branch.
+   5.1. git branch <branch_name> - Create a new branch.
+   5.2. git branch -a - List all remote or local branches.
+   5.3. git branch -d <branch_name> - Delete a branch.
+
+6. git checkout: To start working in a different branch, use git checkout to switch branches.
+   6.1. git checkout new_feature - Switching to branch 'new_feature'
+   6.2. git checkout -b staging  - Creating and switching to branch 'staging'.
+
+7. git clone: To create a local working copy of an existing remote repository, use git clone to copy and download the repository to a computer.
+   7.1. git clone git@account_name.git.beanstalkapp.com:/acccount_name/repository_name.git - git clone <URL>
+
+8. git pull , git push
+
+9. git log: To check commits
+   9.1 git log --author="Name of person"(To check commits made by this person only)
+
+10. git rebase -i HEAD~3: it will tell git that we would like work on last 3 commits 
+                          change pick to squash for squashing all commits to one
+
+11. How do you find a list of files that have been changed in a particular commit:
+	The command to get a list of files that have been changed in a particular commit is:
+
+		git diff-tree –r {commit hash}
+
+		Example: git diff-tree –r 87e673f21b
+		
+		
+12. git config:
+		git config –global user.name “[name]”
+		git config –global user.email “[email address]”
+		This helps to set the username and email to whom the commits belong to.
+        
+13. git fetch: is the command that tells your local git to retrieve the latest meta-data info from the original (yet doesn’t do any file transferring.
+               It’s more like just checking to see if there are any changes available).
+               Downloads the changes and keeps it in remote repo of local branch but doesn't merge them.
+               
+    git pull: on the other hand does that AND brings (copy) those changes from the remote repository.
+              (fetch + merge)
+
+14. git restore --staged files: to restore staged changes back to unstaged.
+
+15. git stash: to store the uncommited changes in a secret repo so that later we can reuse it again.
+    git stash list:
+    git stash show:
+    git stash drop:
+    git stash apply:
+    
+15. git merge: merges a brnach into another branch, for this we need to checkout both the branches 
+               then be on brnach where  u want to merge the code into.
+               Eg: If u want to merge a code into master then be on master and enter this command, "git merge feature"
+               git merge conflict arises then <<HEAD points to the branch u r currently in and >>points to the branch in which this conflict is i.e the merging branch.
+
+Steps to push files into git:  
+1. git init - allows to push files into git repos(One time)
+2. git add .
+3. git commit -m "Any thing"
+4. git push --set-upstream origin branchname(To push new branch on git)
+or
+git push -u origin [branchname]
+
+
+Steps to checkout fresh Project URL and push to new branch: -
+1. git clone URL
+2. git branch --all
+3. git checkout -b brnach name
+3.1 git checkout new_feature
+4. git status
+5. git add .
+6. git commit -m "ANything"
+7. git push --set-upstream origin branchname(one time)
+
+###################################### SonarQube implementation ###############################
+Sonarqube: is a web based open source tool to manage code quality. It has the following features. 
+           Can check the source code for:
+            - standard architecture and design principles
+            - comments
+            - coding rules
+            - code complexity
+            - duplication in code
+
+Covers many languages like Java, C,C++
+
+Working of sonarqube:
+Sonarqube has a list of built-in rules for different languages
+Rules can be configured as per needs called a profile. 
+Sonarqube has a feature which allows the users to create custom quality profiles on various parameters 
+like defects, code smells, issues etc. Default profile is called Sonarway. 
+Customized profiles can be created and attached to projects by activating required set of rules
+
+There are three ways to execute sonarqube:
+- Sonar runner (command line): got to sonar-runner-properties file in conf folder of sonar-runner directory and change few properties to set it to project specific like,
+                                Eg: sonar.projectKey=CALC                       ~ (ANy name of project key)
+                                    sonar.projectName=calculator_project        ~ (Name of project)
+                                    sonar.projectVersion=1.02                   ~ (Artifact version of project)
+                                    sonar.sources=C:\\piyush\\src               ~ (src folder of application path)
+                                    sonar.binaries=C:\\piyush\target            ~ (target folder of project)
+                                    sonar.log.level=WARN                        ~ (default)
+                                    sonar.language=JAVA                         ~ (language of project)
+     
+    For executing sonarrunner through command line just type : sonar-runner on cli.
+     
+- Build script
+- Sonar Lint (plugin to Eclipse)
+
+When these profiles are applied to a project, analysis is performed and a dashboard is created
+
+The dashboard provides the following details:
+- Code demographics – no. of lines of code, files etc
+- Bugs in code
+- Code smells
+- Code coverage details
+- Duplications in code
+
+Quality gates can be applied to ensure that code that does not pass the quality conditions do not move forward to the next stage. 
+
+#################################### Build automation using Maven ###########################################################
+Maven can be considered as a tool that can be used for building and managing any java-based project.
+
+Maven features:
+- Maven is a software management and comprehension tool based on the concept of Project Object Model (POM) 
+  which can manage Project build, Reporting & documentation. In simple terms, Maven is a build automation tool. 
+  Maven generates build for us.
+
+Workflow of Maven:
+- Maven has few built-in lifecycle goals like clean, compile etc. 
+  The other user defined targets and project related configurations are specified in the pom.xml in the project. 
+  When a build is run, Maven executes a set of goals.
+  
+Maven has lifecycle goals to perform the below activities:
+- Clean up the working directories
+- Compile Source Code
+- Copy Resources
+- Compile and Run Tests
+- Package Project
+- Deploy Project
+
+Execution of Maven script:
+- After all the necessary configurations are done in POM.xml and Config.xml, 
+  right click on ‘POM.xml’ and choose ‘Run As -> Maven build…’ and enter one or more of the below mentioned goals:
+
+1. clean:               This goal is responsible to clean up ‘target’ folder in eclipse before build process is initiated.
+2. compile:             This goal is responsible to compile all the .java files and create .class files
+3. sonar:Sonar:         This goal is responsible to trigger the Static code analyzer tool ‘SonarQube’ that is responsible to generate the static code metrics
+4. test:                This goal is responsible to run the Junit testcases written and kept in the folder ‘src\test\java\ut….’
+5. cobertura:cobertura: This goal is responsible to consolidate the outcome of the ‘Test’ goal and generate 
+                        Code Coverage report and make the same available in ‘\site\cobertura\ folder in eclipse.
+6. war:war:             This goal is responsible to create a .war (Web Archive) file
+7. deploy:              This goal is responsible to deploy the .war file at pre-defined server.
+
+#################################### Artifact Repository/Nexus #####################################
+Need:
+- It becomes difficult to reuse common libraries by the development team members in their builds
+- Version control of the dependencies and the build package becomes essential
+
+Def:
+This is a software repository for binary artifacts and their corresponding metadata which is akin to a software version control system for source code. 
+This is a way of versioning code binary artifacts, for ex. jars, wars, ears, fully fledged applications.
+
+An artifact repository has the following features: 
+- Dependencies (libraries) are version controlled
+- Dependencies can be shared
+- Stores information about
+- User who triggered the build
+- Modules which were built
+- Source control(branches) that were used
+- Dependencies used
+- Environment variables
+- Packages installed
+
+Popular tools: 
+- Artifactory
+- Nexus 
+
+Benefits of using an artifact repository:
+- The right version of the build is used for QA and the completely tested version goes for release
+- Ensures that any changes to source code to meet the quality and testing needs are routed only through the source code repository
+- Structures the deployment properly
+- Jenkins is configured with Artifactory using the plugin
+- Artifactory provides a number of plug-ins to support connectivity with other tools
+- Build tools Gradle,Ivy,Ant,MSBuild
+- Source code version control like SVN, Git,Perforce
+- CI Tools like Jenkins,TFS,Bamboo,TeamCity
+
+############################ Jenkins CI Orchestration tool ############################################
+Orchestration:
+- The integration needs to be done using an automated pipeline synchronizing the build activities at regular intervals. 
+  An orchestration tool helps in invoking the appropriate tools/steps of the build cycle regularly 
+  as per the duration configured and apply the conditions (called gates) that need to be satisfied 
+  before they move to the different stages. 
+  Tools like Jenkins, TFS,TeamCity help in orchestration of the build activities.
+ 
+Jenkins:
+Jenkins is an open source, very popular and powerful tool. It has the following features:
+- An open source continuous integration server written in Java
+- Performs “jobs”, is configurable
+- More than 1000+ plugins available
+
+Jenkins workflow:
+- A build script containing the various targets for executing the build cycle activities is available
+- These targets are used by Jenkins for orchestration
+
+Jenkins configurations:
+- Paths to the executables of tools are provided                                            ------------------------>>>>: (In Global Tools Configuration)
+- Users are created with permissions                                                        ------------------------>>>>: (In Manage Users section)
+- Environmental variables are set(Java_HOME ,MVN_Home)                                      ------------------------>>>>: (In Configure system)
+- Plugins for the required tools are uploaded                                               ------------------------>>>>: (In Manage Plugins)
+- Email configurations are done                                                             ------------------------>>>>: (In Configure system)
+- The frequency interval for integration (ie. start of orchestration) is configured         ------------------------>>>>: (In build triggers)
+- The repository from which the code and test cases are to be pulled is configured          ------------------------>>>>: (In Source code management)
+- The jobs (invoker and invoked respectively) are configured as per the build lifecycle     ------------------------>>>>: (In new item)
+- Gating conditions are configured                                                          ------------------------>>>>: (In jobs configurations)
+- Mailer configuration is done so that notifications can be made (ex. when build is broken) ------------------------>>>>: (In post build action email notification)
+- A pipeline view is created to see the status of the builds                                ------------------------>>>>: (In new view tab)
+- Reports of unit testing and coverage are configured to view on Jenkins dashboard itself   ------------------------>>>>: (In Build actions)
+
+###################################### Continuous Integration, COntinuous Delivery vs comtinuous Deployment#######################
+Continuous Integration: Changes made by team are merged into a branch , changes are tested for build quality, tests are run and code is built.
+                        - Requirements of tools: CI server and Automated build steps.
+Continuous Delivery: Automated means to release a software to delivery with click of a button, possible to control frequency of delivery.
+                        - Requirements of tools: CI process, Automated environment provisioning , Automated tests, Rollback in case of incomplete features.
+Continuous Deployment: It is an extension of CI and CD where changes get automatically deployed to customers without human intervention.
+                        - Requirements of tools: CI and CD process, Quality of test cases are good, Documentation and release process should be fast paced.
+                        
+############################ Containerization using Docker #######################################
+Need:
+- Containers allow development teams to work in identical environments and stacks. 
+  That simplify the process of deployment of an image(OS,tools etc) 
+  automatically in very less time across multiple environments.
+  
+What is containerization:
+- Software containers are a form of OS virtualization where the running container includes 
+  just the minimum operating system resources, memory and services required to run an application or service.
+
+The benefits are as follows:
+- Instant startup of operating system resources
+- Container Environments can be replicated, template-ized and validated for production deployments.
+- Greater performance with security
+
+Containerization using Docker: 
+- Docker is a tool designed to make it easier to create, deploy, and run applications by using containers. 
+  Containers allow a developer to package up an application with all of the parts it needs, 
+  such as libraries and other dependencies, and ship it all out as one package.  
+- Docker containers wrap up software and its dependencies into a standardized unit for software development 
+  that includes everything it needs to run: code, runtime, system tools and libraries. 
+  This guarantees that your application will always run the same and makes collaboration as simple as sharing a container image.
+
