@@ -1,0 +1,104 @@
+-------------------------------------------
+how to append output to a file in windows & see output on cmd
+
+command >> path to file | type Path to file.
+--------------------------------------------
+--------------------
+Leap year programs*
+
+if given_year%4 == 0:
+        if given_year%100 == 0:
+            if given_year%400 == 0:
+                leap_year = given_year
+        else:
+            leap_year = given_year
+   
+----------------------
+crontab -l to check all cron jobs scheduled.
+crontab -e to add new jobs.
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+How to generate private key for using ssh urls with Jenkins.
+
+step 1 : write command "ssh-keygen" and press enter
+step 2 : Go to folder /root/.ssh 
+Step 3 : Select SSH private key with username option from jenkins credentials menu.
+step 3 : copy content of id_rsa which is private key onto Jenkins credentials menu
+step 4 : copy content of id_rsa.pub which is public key to authorized keys file.
+step 5 : id would be root
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+How to place settings.xml in maven.
+
+Settings.xml file originally resides under "apache-maven-3.6.3/conf/"
+
+The Maven installation directory: $M2_HOME/conf/settings. xml [global settings]   $M2_HOME = c:/apache-maven-3.6.3
+The user's home directory: ${user. home}/. m2/settings. xml [user settings]
+
+mvn -s path for settings.xml.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+											How to setup Maven in Windows
+
+Download and extract latest maven version,
+Copy path of maven upto /bin and paste it in path variable in environment variable,
+Create a new variable M2_HOME in environment variable and give path upto before /bin means excluding /bin
+pass %M2_HOME%\bin in path variable.
+check mvn -version command on cmd.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+											Write this in a shell script
+
+M2_HOME=/software/maven/apache-maven-2.2.1
+JAVA_HOME=/software/IBM/java-i386-60
+
+ 
+PATH="$PATH:$M2_HOME/bin:$JAVA_HOME/bin"
+export PATH
+
+cd APC-Project/.
+mvn -X -e clean release:prepare -DdryRun=true -s /software/incident_svnWorkspace/setting_mwa.xml
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+How to update path variable in Linux.
+
+Unix derivatives define system wide variables in shell scripts located mostly in the /etc folder, but user-specific values may be given to those variables in scripts located
+in the home folder (e.g., /etc/profile, $HOME/.bash_profile) 
+In the ~/.bash_profile, or related file (.bashrc, .zshrc, .cshrc, setenv.sh), something similar to the below may be used.
+The .profile file in the home folder is a common place to define user variables.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+How to find java installed on linux? How to find path of jdk ?
+
+Path of jDK installed -
+$ which java
+$ whereis java
+
+Java installed or not-
+yum info java
+java -version
+bin/java -version - to check java version
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+How to check if a jar is corrupted or not ?
+
+jar -tvf jarname - lists all the contents of package
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+What is Path variable ??
+
+Environment variables hold values related to the current environment, like the Operating System or user sessions.
+
+Path variable - One of the most well-known is called PATH on Windows, Linux and Mac OS X. It specifies the directories in which executable programs* 
+are located on the machine that can be started without knowing and typing the whole path to the file on the command line.
+
+On Linux and Mac OS X, it usually holds all bin and sbin directories relevant for the current user. On Windows, it contains at least the C:\Windows and C:\Windows\system32 directories — 
+that's why you can run calc.exe or notepad.exe from the command line or Run dialog, but not firefox.exe
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+How to set/search any env variable for a user on linux.
+
+Unix derivatives define system wide variables in shell scripts located mostly in the /etc folder, but user-specific values may be given to those variables in scripts located
+in the home folder (e.g., /etc/profile, $HOME/.bash_profile). The .profile file in the home folder is a common place to define user variables.
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+How to get output of a bash command(ls -lrt,grep,cat) to store in a file ?
+
+Store it using a variable and put all the command inside paranthesis and in beginning add $.
+Eg - output=$(ls -lrt|grep RnD)
+or
+output=`ls -lrt|grep RND`
