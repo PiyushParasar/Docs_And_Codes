@@ -1,0 +1,14 @@
+name: CICD
+on:
+   pull_request:
+      branches:
+          - feature_branch
+          - main
+   push:
+
+jobs:
+  Print:
+    name: Print_JOB_NAME
+    runs-on: ubuntu-latest
+    steps:
+        - run: echo "Print"
