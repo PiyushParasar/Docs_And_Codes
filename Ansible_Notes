@@ -1,6 +1,7 @@
 Ansible is an open-source software provisioning, configuration management, and application-deployment tool enabling infrastructure as code. 
 It runs on many Unix-like systems, and can configure both Unix-like systems as well as Microsoft Windows.
 
+
 Ansible is Infrastructure as a code.
 Ansible is agentless and it works on SSH connections to perform tasks on different servers.
 It is simple , lightweight and easy to use.
